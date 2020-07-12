@@ -10,7 +10,12 @@
         <b-list-group-item
          v-for="(answer, index) in shuffledAnswers" :key="index"
         @click="selectAnswer(index)"
-       :class="[selectedIndex === index ? 'selected' :'']"
+       :class="[
+       !answered && selectedIndex === index ? 'selected' :
+       answered  && correctIndex === index ? 'correct' : 
+       answered  && selectedIndex === index && correctIndex !== index ? 'incorrect' : ''
+       ]"
+   
        >
             
         {{answer}}</b-list-group-item>
@@ -24,7 +29,7 @@
     <b-button 
     variant="primary"
     @click="submitAnswer"
-    :disabled="selectedIndex === null"
+    :disabled="selectedIndex === null || answered"
     > 
         Submit
     </b-button>
@@ -46,7 +51,8 @@ export default {
 return {
     selectedIndex:null,
     correctIndex: null,
-    shuffledAnswers :[]
+    shuffledAnswers :[],
+    answered:false
 }
     },
     methods:{ 
@@ -59,6 +65,7 @@ let isCorrrect = false
 if(this.selectedIndex === this.correctIndex){
     isCorrrect=true
 }
+this.answered = true
 this.increment(isCorrrect)
 },
 shuffleAnswers(){
